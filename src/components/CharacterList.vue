@@ -1,23 +1,26 @@
 <template>
-    <div>
-        <div v-for="character in characters" :key="character.id" class="character">
-            <h3>{{ character.name }}</h3>
-            <label>
-                扮演者:
-                <el-input v-model="votes[character.id].studentName" style="width: 240px" placeholder="Please input" />
-            </label>
-            <label>
-                评分:
-                <el-rate v-model.number="votes[character.id].score" :colors="colors" />
-            </label>
+    <div class="form-container">
+        <div class="character-list">
+            <div v-for="character in characters" :key="character.id" class="character-card">
+                <h3 class="character-title">{{ character.name }}</h3>
+                <label class="form-label">
+                    扮演者:
+                    <el-input v-model="votes[character.id].studentName" style="width: 180px" placeholder="请输入姓名" />
+                </label>
+                <label class="form-label">
+                    评分:
+                    <el-input-number v-model="votes[character.id].score" :min="0" :max="100"
+                        @change="validateScore(character.id)" />
+                </label>
+            </div>
         </div>
-        <button @click="handleSubmit">提交投票</button>
+        <el-button type="primary" @click="handleSubmit" class="submit-button">提交投票</el-button>
     </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
+import { ref, watch } from 'vue';
+import { ElMessage } from 'element-plus';
 
 // 接收 props
 const props = defineProps(['characters']);
@@ -37,15 +40,94 @@ watch(
     { immediate: true }
 );
 
+// 表单验证，确保所有学生姓名都有填写
+const validateForm = () => {
+    for (let key in votes.value) {
+        if (!votes.value[key].studentName) {
+            return false;
+        }
+    }
+    return true;
+};
+
+// 验证分数是否超过100
+const validateScore = (id) => {
+    if (votes.value[id].score > 100) {
+        votes.value[id].score = 100;
+        ElMessage.error('评分不能超过100分');
+    }
+};
+
 // 提交投票
 const handleSubmit = () => {
-    const formattedVotes = Object.values(votes.value);
-    emit('submitVote', formattedVotes);
-}
+    if (validateForm()) {
+        const formattedVotes = Object.values(votes.value);
+        emit('submitVote', formattedVotes);
+    } else {
+        ElMessage.error('请为每个角色输入扮演者姓名！');
+    }
+};
 </script>
 
 <style scoped>
-.character {
-    margin-bottom: 20px;
+/* 容器样式，紧凑居中 */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* 元素靠上 */
+    min-height: 90vh;
+    /* 减少高度，使元素靠上 */
+    padding: 20px;
+    background-color: #f5f5f5;
+    margin-top: 20px;
+    /* 可以微调位置 */
+}
+
+/* 角色列表容器 */
+.character-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    /* 卡片之间的间距 */
+    max-width: 1600px;
+    /* 增加宽度到 1600px */
+}
+
+/* 卡片样式，减少外边距和填充 */
+.character-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 280px;
+    /* 每个卡片的宽度 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 角色标题样式 */
+.character-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* 标签和输入框的样式，紧凑化 */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: left;
+}
+
+/* 提交按钮的样式 */
+.submit-button {
+    margin-top: 20px;
+    width: 180px;
 }
 </style>

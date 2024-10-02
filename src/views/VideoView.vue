@@ -1,28 +1,34 @@
 <template>
-    <h2>{{ video.title }}的视频信息</h2>
-    <div class="common-layout">
-        <el-container>
-            <el-main>
-                <div>
-                    <VideoPlayer :options="videoOptions" ref="videoPlayer" />
-                </div>
+    <div class="video-page">
+        <h2>{{ video.title }} 的视频信息</h2>
+        <el-container class="layout-container">
+            <el-main class="video-section">
+                <VideoPlayer :options="videoOptions" ref="videoPlayer" />
             </el-main>
-            <el-aside width="400px">
-                <!-- 控制视频源的按钮 -->
+            <el-aside width="300px" class="controls-section">
                 <div class="controls">
-                    <button @click="changeVideo(video.original)">原视频</button>
-                    <button @click="changeVideo(video.dubbing)">配音</button>
+                    <div>
+                        <el-button type="primary" @click="changeVideo(video.original)" class="control-button">
+                            原视频
+                        </el-button>
+                    </div>
+                    <div>
+                        <el-button type="success" @click="changeVideo(video.dubbing)" class="control-button">
+                            配音
+                        </el-button>
+                    </div>
                     <RouterLink :to="`/rating/${video.id}`">
-                        <button>投票</button>
+                        <el-button type="warning" class="control-button">投票</el-button>
                     </RouterLink>
                     <RouterLink to="/">
-                        <button>返回首页</button>
+                        <el-button type="danger" class="control-button">返回首页</el-button>
                     </RouterLink>
                 </div>
             </el-aside>
         </el-container>
     </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import VideoPlayer from '@/components/VideoPlayer.vue';
@@ -33,57 +39,70 @@ const route = useRoute();
 const videoStore = useVideoStore();
 const video = videoStore.getVideoById(route.params.id);
 
-// 定义 videoOptions 作为响应式引用
 const videoOptions = ref({
-    // autoplay: true,
     controls: true,
-    width: 960,
-    height: 600,
-    sources: [
-        video.original
-    ]
+    width: 860,
+    height: 486,
+    sources: [video.original]
 });
 
-// 获取 VideoPlayer 组件的实例
 const videoPlayer = ref(null);
 
-// 用于切换视频源的函数
 const changeVideo = (video) => {
-    // 调用 VideoPlayer 组件中的 setSource 方法
     videoPlayer.value.setSource(video);
 };
 </script>
-<style lang="scss">
-.common-layout {
 
-    .el-header,
-    .el-footer,
-    .el-main,
-    .el-aside {
+<style lang="scss" scoped>
+.video-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .layout-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        width: 100%;
+    }
+
+    .video-section {
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
-    .el-header,
-    .el-footer {
-        background-color: var(--el-color-primary-light-7);
-        color: var(--el-text-color-primary);
-        text-align: center;
-    }
+    .controls-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #f0f4f5;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
 
-    .el-aside {
-        background-color: var(--el-color-primary-light-8);
-        color: var(--el-text-color-primary);
-        text-align: center;
-    }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    .el-main {
-        background-color: var(--el-color-primary-light-9);
-        color: var(--el-text-color-primary);
-        text-align: center;
-
-        height: 100%;
+        .control-button {
+            width: 100%;
+            text-align: center;
+        }
     }
 }
 </style>
