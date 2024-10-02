@@ -8,7 +8,7 @@ export const useVideoStore = defineStore('videoStore', {
   actions: {
     async fetchVideos() {
       try {
-        const response = await axios.get('/videos.json');
+        const response = await axios.get('/videos/videos.json');
         this.videos = response.data;
       } catch (error) {
         console.error('Error loading videos:', error);
