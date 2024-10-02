@@ -3,12 +3,12 @@
         <div v-for="character in characters" :key="character.id" class="character">
             <h3>{{ character.name }}</h3>
             <label>
-                学生姓名:
-                <input v-model="votes[character.id].studentName" type="text" />
+                扮演者:
+                <el-input v-model="votes[character.id].studentName" style="width: 240px" placeholder="Please input" />
             </label>
             <label>
                 评分:
-                <input v-model.number="votes[character.id].score" type="number" min="0" max="10" />
+                <el-rate v-model.number="votes[character.id].score" :colors="colors" />
             </label>
         </div>
         <button @click="handleSubmit">提交投票</button>
@@ -17,6 +17,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 
 // 接收 props
 const props = defineProps(['characters']);

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <h1>配音投票系统</h1>
+        <h2>给{{ video.title }}的表演投票</h2>
         <CharacterList v-if="!submitted" :characters="characters" @submitVote="submitVote" />
         <LeaderBoard v-if="submitted" :votes="studentsVotes" @resetVote="resetVote" />
         <div>
-            <RouterLink to="-1">
+            <RouterLink :to="`/video/${video.id}`">
                 <button>返回上一页</button>
             </RouterLink>
             <RouterLink to="/">
@@ -15,16 +15,20 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
+import { useVideoStore } from '@/stores/videoStore';
+
+const route = useRoute();
+const videoStore = useVideoStore();
+const video = videoStore.getVideoById(route.params.id);
+
+
 import { ref } from 'vue'
-import CharacterList from '../components/CharacterList.vue'
-import LeaderBoard from '../components/LeaderBoard.vue'
+import CharacterList from '@/components/CharacterList.vue'
+import LeaderBoard from '@/components/LeaderBoard.vue'
 
 // 影片角色
-const characters = ref([
-    { id: 1, name: '角色1' },
-    { id: 2, name: '角色2' },
-    { id: 3, name: '角色3' }
-]);
+const characters = ref(video.characters);
 
 // 存储角色与学生投票的组合信息
 const studentsVotes = ref([]);
