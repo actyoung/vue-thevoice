@@ -1,7 +1,7 @@
 <template>
   <div class="title-container">
     <h2 class="page-title">历史故事配音秀</h2>
-    <span class="subtitle">教师：吴老师</span>
+    <span class="subtitle">指导老师：吴琛昵</span>
   </div>
   <el-row :gutter="20">
     <!-- 九宫格布局 -->

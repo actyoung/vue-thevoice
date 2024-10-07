@@ -7,12 +7,10 @@
         <el-card class="leaderboard">
             <div class="leaderboard-header">
                 <div class="header-item">角色名</div>
-                <div class="header-item">扮演者</div>
                 <div class="header-item">评分</div>
             </div>
             <div v-for="(vote, index) in sortedVotes" :key="index" class="leaderboard-row">
                 <div class="leaderboard-item">{{ vote.characterName }}</div>
-                <div class="leaderboard-item">{{ vote.studentName }}</div>
                 <div class="leaderboard-item">{{ vote.score }}</div>
             </div>
         </el-card>
@@ -72,8 +70,6 @@ const reset = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
     background-color: #f5f5f5;
     padding: 20px;
 }

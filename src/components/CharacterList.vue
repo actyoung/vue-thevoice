@@ -4,10 +4,6 @@
             <div v-for="character in characters" :key="character.id" class="character-card">
                 <h3 class="character-title">{{ character.name }}</h3>
                 <label class="form-label">
-                    扮演者:
-                    <el-input v-model="votes[character.id].studentName" style="width: 180px" placeholder="请输入姓名" />
-                </label>
-                <label class="form-label">
                     评分:
                     <el-input-number v-model="votes[character.id].score" :min="0" :max="100"
                         @change="validateScore(character.id)" />
@@ -34,21 +30,11 @@ watch(
     () => props.characters,
     (newCharacters) => {
         newCharacters.forEach(character => {
-            votes.value[character.id] = { studentName: '', score: 0 };
+            votes.value[character.id] = { score: 0 };
         });
     },
     { immediate: true }
 );
-
-// 表单验证，确保所有学生姓名都有填写
-const validateForm = () => {
-    for (let key in votes.value) {
-        if (!votes.value[key].studentName) {
-            return false;
-        }
-    }
-    return true;
-};
 
 // 验证分数是否超过100
 const validateScore = (id) => {
@@ -60,12 +46,8 @@ const validateScore = (id) => {
 
 // 提交投票
 const handleSubmit = () => {
-    if (validateForm()) {
-        const formattedVotes = Object.values(votes.value);
-        emit('submitVote', formattedVotes);
-    } else {
-        ElMessage.error('请为每个角色输入扮演者姓名！');
-    }
+    const formattedVotes = Object.values(votes.value);
+    emit('submitVote', formattedVotes);
 };
 </script>
 
@@ -76,8 +58,6 @@ const handleSubmit = () => {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    /* 元素靠上 */
-    min-height: 90vh;
     /* 减少高度，使元素靠上 */
     padding: 20px;
     background-color: #f5f5f5;

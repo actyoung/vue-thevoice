@@ -1,6 +1,6 @@
 <template>
     <div class="video-page">
-        <h2>{{ video.title }} 的视频信息</h2>
+        <h2>{{ video.title }}</h2>
         <el-container class="layout-container">
             <el-main class="video-section">
                 <VideoPlayer :options="videoOptions" ref="videoPlayer" />
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import VideoPlayer from '@/components/VideoPlayer.vue';
 import { useRoute } from 'vue-router';
 import { useVideoStore } from '@/stores/videoStore';
@@ -43,7 +43,8 @@ const videoOptions = ref({
     controls: true,
     width: 860,
     height: 486,
-    sources: [video.original]
+    sources: [video.original],
+    poster: video.cover
 });
 
 const videoPlayer = ref(null);

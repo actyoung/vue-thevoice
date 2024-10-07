@@ -23,6 +23,12 @@ onMounted(() => {
     player.value = videojs(videoPlayer.value, props.options, function () {
         this.log('onPlayerReady', this);
     });
+    player.value.on('ended', () => {
+        // 播放完成后重新显示封面
+        player.value.poster(props.options.poster);
+        player.value.currentTime(0);
+        player.value.load();
+    });
 });
 
 onBeforeUnmount(() => {
